@@ -1,13 +1,15 @@
-package com.vladbstrv.githubapp.ui.userlist
+package com.vladbstrv.githubapp.ui.userdetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.vladbstrv.githubapp.domain.repo.UsersRepo
 
 
-class UserListViewModelFactory(private val repo: UsersRepo) : ViewModelProvider.Factory {
+class UserDetailsViewModelFactory(private val repo: UsersRepo) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return UserListViewModel(repo) as T
+        return UserDetailsViewModel(repo) as T
     }
+
+
 }

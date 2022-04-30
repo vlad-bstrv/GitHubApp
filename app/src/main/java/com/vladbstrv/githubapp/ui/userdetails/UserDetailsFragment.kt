@@ -6,27 +6,72 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.vladbstrv.githubapp.R
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.vladbstrv.githubapp.app
+import com.vladbstrv.githubapp.databinding.UserDetailsFragmentBinding
 
 class UserDetailsFragment : Fragment() {
 
     companion object {
-        fun newInstance() = UserDetailsFragment()
+        private val ARG_KEY = "ARG_KEY"
+
     }
 
+    private var _binding: UserDetailsFragmentBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var viewModel: UserDetailsViewModel
+    private val adapter = UserDetailsAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.user_details_fragment, container, false)
+    ): View {
+        _binding = UserDetailsFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(UserDetailsViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(
+            this,
+            UserDetailsViewModelFactory(requireActivity().app.usersListRepo)
+        )[UserDetailsViewModel::class.java]
+
+        val args = this.arguments
+        initViews()
+        initViewEvents(args?.get("name").toString())
+        initViewModelEvents()
     }
 
+    private fun initViews() {
+        binding.reposRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        adapter.setHasStableIds(true)
+        binding.reposRecyclerView.adapter = adapter
+    }
+
+    private fun initViewEvents(name: String) {
+        viewModel.onShowUserDetails(name)
+        viewModel.onShowRepos(name)
+    }
+
+    private fun initViewModelEvents() {
+        viewModel.repos.observe(requireActivity()) {
+            adapter.setData(it)
+        }
+        viewModel.userDetails.observe(requireActivity()) {
+            Glide
+                .with(requireContext())
+                .load(it.avatarUrl)
+                .into(binding.avatarImageView)
+            binding.loginTextView.text = it.login
+            binding.nameTextView.text = it.name
+        }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
 }

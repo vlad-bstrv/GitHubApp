@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.vladbstrv.githubapp.R
 import com.vladbstrv.githubapp.app
 import com.vladbstrv.githubapp.databinding.UserListFragmentBinding
-import com.vladbstrv.githubapp.ui.domain.entity.UserListEntity
+import com.vladbstrv.githubapp.domain.entity.UserListEntity
+import com.vladbstrv.githubapp.ui.userdetails.UserDetailsFragment
 
 class UserListFragment : Fragment() {
 
@@ -21,7 +22,7 @@ class UserListFragment : Fragment() {
     private var _binding: UserListFragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: UserListViewModel
-    private val adapter = UserListAdapter()
+    private lateinit var adapter: UserListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +38,19 @@ class UserListFragment : Fragment() {
             this,
             UserListViewModelFactory(requireActivity().app.usersListRepo)
         )[UserListViewModel::class.java]
+
+        adapter = UserListAdapter(object : OnListItemClickListener {
+            override fun onItemClick(data: UserListEntity) {
+                val bundle = Bundle()
+                bundle.putString("name" ,data.name)
+                val userDetailsFragment = UserDetailsFragment()
+                userDetailsFragment.arguments = bundle
+                parentFragmentManager.beginTransaction()
+                    .addToBackStack("")
+                    .replace(R.id.container, userDetailsFragment)
+                    .commit()
+            }
+        })
 
         initViews()
         initViewEvents()
@@ -54,7 +68,7 @@ class UserListFragment : Fragment() {
     }
 
     private fun initViewModelEvents() {
-        viewModel.repos.observe(requireActivity()){
+        viewModel.repos.observe(requireActivity()) {
             adapter.setData(it)
         }
     }

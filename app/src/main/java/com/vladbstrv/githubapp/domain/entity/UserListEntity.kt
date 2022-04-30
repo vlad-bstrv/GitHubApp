@@ -1,4 +1,4 @@
-package com.vladbstrv.githubapp.ui.domain.entity
+package com.vladbstrv.githubapp.domain.entity
 
 data class UserListEntity(
     val name: String

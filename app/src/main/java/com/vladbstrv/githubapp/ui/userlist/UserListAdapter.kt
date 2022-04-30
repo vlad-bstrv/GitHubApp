@@ -5,9 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vladbstrv.githubapp.databinding.ItemUserListFragmentBinding
-import com.vladbstrv.githubapp.ui.domain.entity.UserListEntity
+import com.vladbstrv.githubapp.domain.entity.UserListEntity
 
-class UserListAdapter : RecyclerView.Adapter<UserListAdapter.UserListViewHolder>() {
+class UserListAdapter(val onListItemClickListener: OnListItemClickListener) :
+    RecyclerView.Adapter<UserListAdapter.UserListViewHolder>() {
 
     private var data: List<UserListEntity> = mutableListOf()
 
@@ -32,6 +33,9 @@ class UserListAdapter : RecyclerView.Adapter<UserListAdapter.UserListViewHolder>
         fun bind(data: UserListEntity) {
             ItemUserListFragmentBinding.bind(itemView).apply {
                 nameUserTextView.text = data.name
+                itemView.setOnClickListener {
+                    onListItemClickListener.onItemClick(data)
+                }
             }
         }
     }
