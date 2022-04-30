@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vladbstrv.githubapp.R
+import com.vladbstrv.githubapp.app
 import com.vladbstrv.githubapp.databinding.UserListFragmentBinding
 import com.vladbstrv.githubapp.ui.domain.entity.UserListEntity
 
@@ -32,7 +33,10 @@ class UserListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[UserListViewModel::class.java]
+        viewModel = ViewModelProvider(
+            this,
+            UserListViewModelFactory(requireActivity().app.usersListRepo)
+        )[UserListViewModel::class.java]
 
         initViews()
         initViewEvents()
@@ -46,18 +50,13 @@ class UserListFragment : Fragment() {
     }
 
     private fun initViewEvents() {
-
+        viewModel.onShowRepos()
     }
 
     private fun initViewModelEvents() {
-        val list = mutableListOf(
-            UserListEntity("1"),
-            UserListEntity("2"),
-            UserListEntity("3"),
-            UserListEntity("4"),
-            UserListEntity("5"),
-        )
-        adapter.setData(list)
+        viewModel.repos.observe(requireActivity()){
+            adapter.setData(it)
+        }
     }
 
     override fun onDestroy() {

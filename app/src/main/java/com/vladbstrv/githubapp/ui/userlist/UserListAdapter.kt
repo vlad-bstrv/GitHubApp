@@ -11,7 +11,7 @@ class UserListAdapter : RecyclerView.Adapter<UserListAdapter.UserListViewHolder>
 
     private var data: List<UserListEntity> = mutableListOf()
 
-    fun setData(newUserListData: MutableList<UserListEntity>) {
+    fun setData(newUserListData: List<UserListEntity>) {
         data = newUserListData
         notifyDataSetChanged()
     }
