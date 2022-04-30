@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/name_user_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="name"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_margin="8dp"/>
+
+</FrameLayout>
