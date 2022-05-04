@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vladbstrv.githubapp.R
 import com.vladbstrv.githubapp.app
@@ -41,20 +42,29 @@ class UserListFragment : Fragment() {
 
         adapter = UserListAdapter(object : OnListItemClickListener {
             override fun onItemClick(data: UserListEntity) {
-                val bundle = Bundle()
-                bundle.putString("name" ,data.name)
-                val userDetailsFragment = UserDetailsFragment()
-                userDetailsFragment.arguments = bundle
-                parentFragmentManager.beginTransaction()
-                    .addToBackStack("")
-                    .replace(R.id.container, userDetailsFragment)
-                    .commit()
+                navigateTo(data.login)
             }
         })
+
+        binding.searchUserButton.setOnClickListener {
+            val username = binding.searchUserEditText.text.toString()
+            navigateTo(username)
+        }
 
         initViews()
         initViewEvents()
         initViewModelEvents()
+    }
+
+    private fun navigateTo(username: String) {
+        val bundle = Bundle()
+        bundle.putString("name" ,username)
+        val userDetailsFragment = UserDetailsFragment()
+        userDetailsFragment.arguments = bundle
+        parentFragmentManager.beginTransaction()
+            .addToBackStack("")
+            .replace(R.id.container, userDetailsFragment)
+            .commit()
     }
 
     private fun initViews() {
@@ -70,6 +80,12 @@ class UserListFragment : Fragment() {
     private fun initViewModelEvents() {
         viewModel.repos.observe(requireActivity()) {
             adapter.setData(it)
+        }
+
+        viewModel.inProgress.observe(requireActivity()) {
+            binding.progressBar.isVisible = it
+            binding.searchUserEditText.isVisible = !it
+            binding.searchUserButton.isVisible = !it
         }
     }
 
