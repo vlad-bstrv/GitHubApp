@@ -42,7 +42,7 @@ class UserListFragment : Fragment() {
         adapter = UserListAdapter(object : OnListItemClickListener {
             override fun onItemClick(data: UserListEntity) {
                 val bundle = Bundle()
-                bundle.putString("name" ,data.name)
+                bundle.putString("name" ,data.login)
                 val userDetailsFragment = UserDetailsFragment()
                 userDetailsFragment.arguments = bundle
                 parentFragmentManager.beginTransaction()

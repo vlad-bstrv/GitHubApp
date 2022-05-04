@@ -32,7 +32,7 @@ class UserListAdapter(val onListItemClickListener: OnListItemClickListener) :
     inner class UserListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(data: UserListEntity) {
             ItemUserListFragmentBinding.bind(itemView).apply {
-                nameUserTextView.text = data.name
+                nameUserTextView.text = data.login
                 itemView.setOnClickListener {
                     onListItemClickListener.onItemClick(data)
                 }
