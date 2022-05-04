@@ -63,7 +63,7 @@ class UserDetailsFragment : Fragment() {
         }
         viewModel.userDetails.observe(requireActivity()) {
             it.let {
-                binding.avatarImageView.load(it.avatar_url)
+                binding.avatarImageView.load(it.avatarUrl)
                 binding.loginTextView.text = it.login
                 binding.nameTextView.text = it.name
             }

@@ -1,5 +1,6 @@
 package com.vladbstrv.githubapp.data.retrofit
 
+import com.vladbstrv.githubapp.data.retrofit.utils.Mapper
 import com.vladbstrv.githubapp.domain.entity.ReposEntity
 import com.vladbstrv.githubapp.domain.entity.UserDetailEntity
 import com.vladbstrv.githubapp.domain.entity.UserListEntity
@@ -20,14 +21,18 @@ class RetrofitUsersRepoImpl : UsersRepo {
     private val api: GithubApi = retrofit.create(GithubApi::class.java)
 
     override fun observeUsersList(): Single<List<UserListEntity>> {
-        return api.listUsers()
+        return api.listUsers().map { Mapper().mapUserListDtoToEntity(it) }
     }
 
     override fun observeUsersDetails(username: String): Single<UserDetailEntity> {
-        return api.userDetail(username)
+        return api.userDetail(username).map {
+            Mapper().mapUserDetailDtoToEntity(it)
+        }
     }
 
     override fun observeRepos(username: String): Single<List<ReposEntity>> {
-        return api.listRepos(username)
+        return api.listRepos(username).map {
+            Mapper().mapReposDtoToEntity(it)
+        }
     }
 }
