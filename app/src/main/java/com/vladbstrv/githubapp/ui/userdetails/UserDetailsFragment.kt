@@ -6,8 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
+import coil.load
 import com.vladbstrv.githubapp.app
 import com.vladbstrv.githubapp.databinding.UserDetailsFragmentBinding
 
@@ -61,12 +62,15 @@ class UserDetailsFragment : Fragment() {
             adapter.setData(it)
         }
         viewModel.userDetails.observe(requireActivity()) {
-            Glide
-                .with(requireContext())
-                .load(it.avatarUrl)
-                .into(binding.avatarImageView)
-            binding.loginTextView.text = it.login
-            binding.nameTextView.text = it.name
+            it.let {
+                binding.avatarImageView.load(it.avatar_url)
+                binding.loginTextView.text = it.login
+                binding.nameTextView.text = it.name
+            }
+
+        }
+        viewModel.inProgress.observe(requireActivity()) {
+            binding.progressBar.isVisible = it
         }
     }
 

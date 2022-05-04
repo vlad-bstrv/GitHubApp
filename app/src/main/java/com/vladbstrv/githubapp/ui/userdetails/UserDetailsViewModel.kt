@@ -17,14 +17,19 @@ class UserDetailsViewModel(private val usersListRepo: UsersRepo) : ViewModel() {
     private val _repos = MutableLiveData<List<ReposEntity>>()
     val repos: LiveData<List<ReposEntity>> = _repos
 
+    private val _inProgress = MutableLiveData<Boolean>()
+    val inProgress: LiveData<Boolean> = _inProgress
+
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     fun onShowUserDetails(username: String) {
+        _inProgress.postValue(true)
         compositeDisposable.add(
             usersListRepo
                 .observeUsersDetails(username)
                 .subscribeBy {
                     _userDetails.postValue(it)
+                    _inProgress.postValue(false)
                 }
         )
     }
