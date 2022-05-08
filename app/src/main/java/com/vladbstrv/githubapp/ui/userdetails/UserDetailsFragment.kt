@@ -11,11 +11,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.vladbstrv.githubapp.app
 import com.vladbstrv.githubapp.databinding.UserDetailsFragmentBinding
+import java.lang.IllegalStateException
 
 class UserDetailsFragment : Fragment() {
 
     companion object {
         private val ARG_KEY = "ARG_KEY"
+
+        fun newInstance(username: String) = UserDetailsFragment().apply {
+            arguments = Bundle()
+            arguments?.putString(ARG_KEY, username)
+        }
 
     }
 
@@ -24,6 +30,11 @@ class UserDetailsFragment : Fragment() {
 
     private lateinit var viewModel: UserDetailsViewModel
     private val adapter = UserDetailsAdapter()
+
+    private fun getUsernameFromArguments(): String {
+        return arguments?.getString(ARG_KEY)
+            ?: throw IllegalStateException("null arguments")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,9 +51,9 @@ class UserDetailsFragment : Fragment() {
             UserDetailsViewModelFactory(requireActivity().app.usersListRepo)
         )[UserDetailsViewModel::class.java]
 
-        val args = this.arguments
+        val username = getUsernameFromArguments()
         initViews()
-        initViewEvents(args?.get("name").toString())
+        initViewEvents(username)
         initViewModelEvents()
     }
 
