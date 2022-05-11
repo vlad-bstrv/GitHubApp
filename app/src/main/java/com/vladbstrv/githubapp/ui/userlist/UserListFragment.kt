@@ -9,12 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.vladbstrv.githubapp.app
 import com.vladbstrv.githubapp.databinding.UserListFragmentBinding
 import com.vladbstrv.githubapp.domain.entity.UserListEntity
 import com.vladbstrv.githubapp.domain.repo.UsersRepo
+import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.lang.IllegalStateException
+import javax.inject.Inject
 
 class UserListFragment : Fragment() {
 
@@ -22,9 +25,12 @@ class UserListFragment : Fragment() {
         fun newInstance() = UserListFragment()
     }
 
+    @Inject
+    lateinit var usersRepo: UsersRepo
+
     private var _binding: UserListFragmentBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: UserListViewModel by viewModel()
+    private lateinit var viewModel: UserListViewModel
     private lateinit var adapter: UserListAdapter
 
     override fun onAttach(context: Context) {
@@ -49,6 +55,11 @@ class UserListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().app.appDependenciesComponent.inject(this)
+        viewModel = ViewModelProvider(
+            this,
+            UserListViewModelFactory(usersRepo)
+        )[UserListViewModel::class.java]
 
         initViews()
         initViewEvents()
