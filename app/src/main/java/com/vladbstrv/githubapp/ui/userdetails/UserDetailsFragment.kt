@@ -9,11 +9,13 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
+import com.vladbstrv.githubapp.app
 import com.vladbstrv.githubapp.databinding.UserDetailsFragmentBinding
 import com.vladbstrv.githubapp.domain.repo.UsersRepo
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.lang.IllegalStateException
+import javax.inject.Inject
 
 class UserDetailsFragment : Fragment() {
 
@@ -27,9 +29,12 @@ class UserDetailsFragment : Fragment() {
 
     }
 
+    @Inject
+    lateinit var usersRepo: UsersRepo
+
     private var _binding: UserDetailsFragmentBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: UserDetailsViewModel by viewModel()
+    private lateinit var viewModel: UserDetailsViewModel
     private val adapter = UserDetailsAdapter()
 
     private fun getUsernameFromArguments(): String {
@@ -48,6 +53,8 @@ class UserDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val username = getUsernameFromArguments()
+        requireActivity().app.appDependenciesComponent.inject(this)
+        viewModel = ViewModelProvider(this, UserDetailsViewModelFactory(usersRepo))[UserDetailsViewModel::class.java]
         initViews()
         initViewEvents(username)
         initViewModelEvents()

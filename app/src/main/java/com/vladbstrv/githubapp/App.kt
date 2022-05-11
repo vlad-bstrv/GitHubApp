@@ -1,19 +1,24 @@
 package com.vladbstrv.githubapp
 
 import android.app.Application
-import com.vladbstrv.githubapp.di.appModule
-import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
-import org.koin.core.context.startKoin
+import android.content.Context
+import com.vladbstrv.githubapp.di.AppDependenciesComponent
+import com.vladbstrv.githubapp.di.DaggerAppDependenciesComponent
 
 class App : Application() {
 
+    lateinit var appDependenciesComponent: AppDependenciesComponent
+
     override fun onCreate() {
         super.onCreate()
-        startKoin {
-            androidLogger()
-            androidContext(this@App)
-            modules(appModule)
-        }
+
+        appDependenciesComponent = DaggerAppDependenciesComponent
+            .builder()
+            .build()
     }
 }
+
+val Context.app: App
+    get() {
+        return applicationContext as App
+    }
