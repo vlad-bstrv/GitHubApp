@@ -9,21 +9,33 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
-import com.vladbstrv.githubapp.app
 import com.vladbstrv.githubapp.databinding.UserDetailsFragmentBinding
+import com.vladbstrv.githubapp.domain.repo.UsersRepo
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.lang.IllegalStateException
 
 class UserDetailsFragment : Fragment() {
 
     companion object {
         private val ARG_KEY = "ARG_KEY"
 
+        fun newInstance(username: String) = UserDetailsFragment().apply {
+            arguments = Bundle()
+            arguments?.putString(ARG_KEY, username)
+        }
+
     }
 
     private var _binding: UserDetailsFragmentBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var viewModel: UserDetailsViewModel
+    private val viewModel: UserDetailsViewModel by viewModel()
     private val adapter = UserDetailsAdapter()
+
+    private fun getUsernameFromArguments(): String {
+        return arguments?.getString(ARG_KEY)
+            ?: throw IllegalStateException("null arguments")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,14 +47,9 @@ class UserDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(
-            this,
-            UserDetailsViewModelFactory(requireActivity().app.usersListRepo)
-        )[UserDetailsViewModel::class.java]
-
-        val args = this.arguments
+        val username = getUsernameFromArguments()
         initViews()
-        initViewEvents(args?.get("name").toString())
+        initViewEvents(username)
         initViewModelEvents()
     }
 
@@ -63,7 +70,7 @@ class UserDetailsFragment : Fragment() {
         }
         viewModel.userDetails.observe(requireActivity()) {
             it.let {
-                binding.avatarImageView.load(it.avatar_url)
+                binding.avatarImageView.load(it.avatarUrl)
                 binding.loginTextView.text = it.login
                 binding.nameTextView.text = it.name
             }
