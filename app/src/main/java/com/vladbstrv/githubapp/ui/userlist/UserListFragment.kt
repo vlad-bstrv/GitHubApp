@@ -9,11 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.vladbstrv.githubapp.R
-import com.vladbstrv.githubapp.app
 import com.vladbstrv.githubapp.databinding.UserListFragmentBinding
 import com.vladbstrv.githubapp.domain.entity.UserListEntity
-import com.vladbstrv.githubapp.ui.userdetails.UserDetailsFragment
+import com.vladbstrv.githubapp.domain.repo.UsersRepo
+import org.koin.android.ext.android.inject
 import java.lang.IllegalStateException
 
 class UserListFragment : Fragment() {
@@ -26,6 +25,7 @@ class UserListFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var viewModel: UserListViewModel
     private lateinit var adapter: UserListAdapter
+    private val userRepo: UsersRepo by inject()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -51,7 +51,7 @@ class UserListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(
             this,
-            UserListViewModelFactory(requireActivity().app.usersListRepo)
+            UserListViewModelFactory(userRepo)
         )[UserListViewModel::class.java]
 
         initViews()
