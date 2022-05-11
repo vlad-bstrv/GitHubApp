@@ -13,6 +13,7 @@ import com.vladbstrv.githubapp.databinding.UserListFragmentBinding
 import com.vladbstrv.githubapp.domain.entity.UserListEntity
 import com.vladbstrv.githubapp.domain.repo.UsersRepo
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.lang.IllegalStateException
 
 class UserListFragment : Fragment() {
@@ -23,9 +24,8 @@ class UserListFragment : Fragment() {
 
     private var _binding: UserListFragmentBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel: UserListViewModel
+    private val viewModel: UserListViewModel by viewModel()
     private lateinit var adapter: UserListAdapter
-    private val userRepo: UsersRepo by inject()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -49,10 +49,6 @@ class UserListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(
-            this,
-            UserListViewModelFactory(userRepo)
-        )[UserListViewModel::class.java]
 
         initViews()
         initViewEvents()

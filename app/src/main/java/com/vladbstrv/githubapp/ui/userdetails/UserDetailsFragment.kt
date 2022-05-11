@@ -12,6 +12,7 @@ import coil.load
 import com.vladbstrv.githubapp.databinding.UserDetailsFragmentBinding
 import com.vladbstrv.githubapp.domain.repo.UsersRepo
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.lang.IllegalStateException
 
 class UserDetailsFragment : Fragment() {
@@ -28,8 +29,7 @@ class UserDetailsFragment : Fragment() {
 
     private var _binding: UserDetailsFragmentBinding? = null
     private val binding get() = _binding!!
-    private val userRepo: UsersRepo by inject()
-    private lateinit var viewModel: UserDetailsViewModel
+    private val viewModel: UserDetailsViewModel by viewModel()
     private val adapter = UserDetailsAdapter()
 
     private fun getUsernameFromArguments(): String {
@@ -47,11 +47,6 @@ class UserDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(
-            this,
-            UserDetailsViewModelFactory(userRepo)
-        )[UserDetailsViewModel::class.java]
-
         val username = getUsernameFromArguments()
         initViews()
         initViewEvents(username)

@@ -3,6 +3,9 @@ package com.vladbstrv.githubapp.di
 import com.vladbstrv.githubapp.data.retrofit.GithubApi
 import com.vladbstrv.githubapp.data.retrofit.RetrofitUsersRepoImpl
 import com.vladbstrv.githubapp.domain.repo.UsersRepo
+import com.vladbstrv.githubapp.ui.userdetails.UserDetailsViewModel
+import com.vladbstrv.githubapp.ui.userlist.UserListViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Converter
@@ -22,6 +25,9 @@ val appModule = module {
     }
     factory<Converter.Factory> { GsonConverterFactory.create() }
     single(named("api_url")) { "https://api.github.com" }
+
+    viewModel { UserListViewModel(get()) }
+    viewModel { UserDetailsViewModel(get()) }
 }
 
 
