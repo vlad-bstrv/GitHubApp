@@ -69,5 +69,15 @@ class MapperTest {
         Assert.assertEquals(expected, actual)
     }
 
+    @Test
+    fun exampleTest_NotNull_ReturnTrue() {
+        Assert.assertNotNull(mapper.exampleTest(2))
+    }
+
+    @Test
+    fun exampleTest_Null_ReturnTrue() {
+        Assert.assertNull(mapper.exampleTest(null))
+    }
+
 }
 

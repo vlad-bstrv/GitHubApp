@@ -42,4 +42,7 @@ class Mapper {
 
         return list
     }
+
+    fun exampleTest(data: Int?) = data?.plus(2)
+
 }
