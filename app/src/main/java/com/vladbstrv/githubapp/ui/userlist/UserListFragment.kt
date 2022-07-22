@@ -29,9 +29,9 @@ class UserListFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if(activity !is Controller) {
-            throw IllegalStateException("Activity don't extend Controller")
-        }
+//        if(activity !is Controller) {
+//            throw IllegalStateException("Activity don't extend Controller")
+//        }
     }
 
     private val controller: Controller

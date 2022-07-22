@@ -1,5 +1,6 @@
 package com.vladbstrv.githubapp.di
 
+import com.vladbstrv.githubapp.data.MockUsersRepoImpl
 import com.vladbstrv.githubapp.data.retrofit.GithubApi
 import com.vladbstrv.githubapp.data.retrofit.RetrofitUsersRepoImpl
 import com.vladbstrv.githubapp.domain.repo.UsersRepo
@@ -14,7 +15,8 @@ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 val appModule = module {
-    single<UsersRepo> { RetrofitUsersRepoImpl(get()) }
+//    single<UsersRepo> { RetrofitUsersRepoImpl(get()) }
+    single<UsersRepo> { MockUsersRepoImpl() }
     single<GithubApi> { get<Retrofit>().create(GithubApi::class.java) }
     single<Retrofit> {
         Retrofit.Builder()
